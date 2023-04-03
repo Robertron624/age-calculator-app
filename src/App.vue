@@ -10,17 +10,18 @@
         <form action="GET">
           <div class="input-container">
               <label for="day">Day</label>
-              <input type="number" name="day" id="day">
+              <input placeholder="DD" type="number" name="day" id="day">
           </div>
           <div class="input-container">
               <label for="month">Month</label>
-              <input type="number" name="month" id="month">
+              <input placeholder="MM" type="number" name="month" id="month">
           </div>
           <div class="input-container">
             <label for="year">year</label>
-            <input type="number" name="year" id="year">
+            <input placeholder="YYYY" type="number" name="year" id="year">
           </div>
         </form>
+        <img class="arrow" src="icon-arrow.svg" alt="arrow">
       </div>
       <div class="calculation">
         <span>38 <strong>years</strong></span>
@@ -53,6 +54,18 @@ main {
 .date-inputs {
   padding: 2rem 0 3rem 0;
   border-bottom: 1px solid var(--light-grey);
+  position: relative;
+}
+
+.arrow {
+  position: absolute;
+  top: 100%;
+  right: 39%;
+  transform: translateY(-50%);
+  background-color: var(--purple);
+  border-radius: 50%;
+  width: 40px;
+  padding: .4rem;
 }
 .date-inputs form{
     display: flex;
@@ -96,6 +109,7 @@ main {
   font-weight: 800;
   color: var(--purple);
   font-style: italic;
+  width: 100%;
 }
 
 .calculation span strong {
