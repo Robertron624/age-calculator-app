@@ -117,16 +117,14 @@ main {
   font-weight: 800;
 }
 
-@media (min-width: 1024px) {
-  header {
-    display: flex;
-    place-items: center;
+@media (min-width: 768px) {
+  .container {
+    max-width: none;
+    min-width: 450px;
   }
 
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
+  .arrow {
+    right: 7%;
   }
 }
 </style>
