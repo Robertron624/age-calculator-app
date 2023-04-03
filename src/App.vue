@@ -1,4 +1,31 @@
-<script setup>
+<script>
+  export default {
+    data() {
+      return {
+        years: "--",
+        months: "--",
+        days: "--",
+        yearsInput: "",
+        monthsInput: "",
+        daysInput: "",
+      }
+    },
+    methods: {
+      calculate() {
+        console.log("submitted !!")
+        const date = new Date(this.yearsInput, this.monthsInput, this.daysInput);
+        const today = new Date();
+
+        const diff = today - date;
+        const diffInYears = (diff / (1000 * 60 * 60 * 24)) / 365;
+        const diffInMonths =  Math.abs(today.getMonth() +1 - date.getMonth());
+        const diffInDays = Math.abs(today.getUTCDate() - date.getUTCDate());
+        this.years = Math.floor(diffInYears);
+        this.months = Math.floor(diffInMonths);
+        this.days = Math.floor(diffInDays);
+      },
+    },
+  }
 
 </script>
 
@@ -7,26 +34,30 @@
   <main>
     <div class="container">
       <div class="date-inputs">
-        <form action="GET">
+        <form action="GET" @submit.prevent="calculate">
           <div class="input-container">
               <label for="day">Day</label>
-              <input placeholder="DD" type="number" name="day" id="day">
+              <input v-model="daysInput" placeholder="DD" type="number" name="day" id="day">
           </div>
           <div class="input-container">
               <label for="month">Month</label>
-              <input placeholder="MM" type="number" name="month" id="month">
+              <input v-model="monthsInput" placeholder="MM" type="number" name="month" id="month">
           </div>
           <div class="input-container">
             <label for="year">year</label>
-            <input placeholder="YYYY" type="number" name="year" id="year">
+            <input v-model="yearsInput" placeholder="YYYY" type="number" name="year" id="year">
           </div>
+          <button role="button" class="arrow" type="submit">
+          <svg xmlns="http://www.w3.org/2000/svg" width="46" height="44" viewBox="0 0 46 44"><g fill="none" stroke="#FFF" stroke-width="2"><path d="M1 22.019C8.333 21.686 23 25.616 23 44M23 44V0M45 22.019C37.667 21.686 23 25.616 23 44"/></g></svg>
+        </button>
         </form>
-        <img class="arrow" src="icon-arrow.svg" alt="arrow">
+        <!-- <img class="arrow" src="icon-arrow.svg" alt="arrow"> -->
+
       </div>
       <div class="calculation">
-        <span>38 <strong>years</strong></span>
-        <span>3 <strong>months</strong></span>
-        <span>26 <strong>days</strong></span>
+        <span>{{ years }} <strong>years</strong></span>
+        <span>{{ months }} <strong>months</strong></span>
+        <span>{{ days }} <strong>days</strong></span>
       </div>
     </div>
   </main>
@@ -45,7 +76,7 @@ main {
 .container {
   max-width: 90%;
   margin: 0 auto;
-  padding: 0 1rem;
+  padding: 0 2rem;
   background-color: white;
   border-radius: 20px 20px 26% 20px;
 }
@@ -58,15 +89,30 @@ main {
 }
 
 .arrow {
+  border-color: transparent;
   position: absolute;
-  top: 100%;
+  bottom: -155%;
   right: 39%;
   transform: translateY(-50%);
   background-color: var(--purple);
   border-radius: 50%;
   width: 40px;
   padding: .4rem;
+  transition: all .3s ease-in-out;
+  cursor: pointer;
 }
+
+.arrow svg {
+  display: block;
+  width: 25px;
+  height: 25px;
+}
+
+.arrow:hover {
+  background-color: black;
+}
+
+
 .date-inputs form{
     display: flex;
     justify-content: space-between;
@@ -95,6 +141,10 @@ main {
   padding-left: .5rem;
 }
 
+.date-inputs input:focus {
+  border: 1px solid var(--purple);
+}
+
 .calculation {
   display: flex;
   flex-direction: column;
@@ -111,7 +161,6 @@ main {
   font-style: italic;
   width: 100%;
 }
-
 .calculation span strong {
   color: black;
   font-weight: 800;
@@ -124,7 +173,15 @@ main {
   }
 
   .arrow {
-    right: 7%;
+    right: -25%;
+  }
+
+  .date-inputs input {
+    width: 5rem;
+  }
+
+  .date-inputs form {
+    width: 70%;
   }
 }
 </style>
