@@ -8,21 +8,101 @@
         yearsInput: "",
         monthsInput: "",
         daysInput: "",
+        inputErrors : {
+          yearsErrors: "",
+          monthsErrors: "",
+          daysErrors: "",
+        }
       }
     },
     methods: {
+
+      checkEmpty() {
+
+        let empties = 0;
+
+        const EMPTYMSG = "This field is required";
+
+        if (this.yearsInput === "") {
+          this.inputErrors.yearsErrors = EMPTYMSG;
+          empties++;
+        } else {
+          this.inputErrors.yearsErrors = "";
+        }
+        if (this.monthsInput === "") {
+          this.inputErrors.monthsErrors =  EMPTYMSG;
+          empties++;
+        } else {
+          this.inputErrors.monthsErrors = "";
+        }
+        if (this.daysInput === "") {
+          this.inputErrors.daysErrors =  EMPTYMSG;
+          empties++;
+        } else {
+          this.inputErrors.daysErrors = "";
+        }
+
+        return empties
+      },
+
+      isNumberValid (type, value) {
+        const INVALIDMSG = "Must be a valid ";
+        const currentYear = new Date().getFullYear();
+        let isValid = true;
+        switch(type) {
+          case "day":
+            if (value > 31 || value < 1) {
+              console.log("if day")
+              isValid = false;
+              this.inputErrors.daysErrors = INVALIDMSG + type;
+            } else {
+              this.inputErrors.daysErrors = "";
+            }
+            break;
+          case "month":
+            if (value > 12 || value < 1) {
+              console.log("if month")
+              this.inputErrors.monthsErrors = INVALIDMSG + type;
+              isValid = false;
+            } else {
+              this.inputErrors.monthsErrors = "";
+            }
+            break;
+          case "year":
+            if (value > currentYear) {
+              console.log("if year")
+              this.inputErrors.yearsErrors = INVALIDMSG + type;
+              isValid = false;
+            } else {
+              this.inputErrors.yearsErrors = "";
+            }
+            break;
+        }
+        return isValid;
+      },
+      
+
       calculate() {
+
+        if(this.checkEmpty() > 0) return;
+
+        const validDay = this.isNumberValid("day", this.daysInput);
+        const validMonth = this.isNumberValid("month", this.monthsInput);
+        const validYear = this.isNumberValid("year", this.yearsInput);
+
+        if (!validDay || !validMonth || !validYear) return;
+
         console.log("submitted !!")
         const date = new Date(this.yearsInput, this.monthsInput, this.daysInput);
         const today = new Date();
 
         const diff = today - date;
         const diffInYears = (diff / (1000 * 60 * 60 * 24)) / 365;
-        const diffInMonths =  Math.abs(today.getMonth() +1 - date.getMonth());
+        const diffInMonths =  Math.abs(today.getMonth() + date.getMonth());
         const diffInDays = Math.abs(today.getUTCDate() - date.getUTCDate());
         this.years = Math.floor(diffInYears);
         this.months = Math.floor(diffInMonths);
-        this.days = Math.floor(diffInDays);
+        this.days = 31 - Math.floor(diffInDays);
       },
     },
   }
@@ -36,16 +116,19 @@
       <div class="date-inputs">
         <form action="GET" @submit.prevent="calculate">
           <div class="input-container">
-              <label for="day">Day</label>
-              <input v-model="daysInput" placeholder="DD" type="number" name="day" id="day">
+              <label :class="{'error-label': inputErrors.daysErrors}" for="day">Day</label>
+              <input :class="{'error-border': inputErrors.daysErrors}" v-model="daysInput" placeholder="DD" type="number" name="day" id="day">
+              <span v-if="inputErrors.daysErrors" class="error-msg">{{ inputErrors.daysErrors }}</span>
           </div>
           <div class="input-container">
-              <label for="month">Month</label>
-              <input v-model="monthsInput" placeholder="MM" type="number" name="month" id="month">
+              <label :class="{'error-label': inputErrors.monthsErrors}" for="month">Month</label>
+              <input :class="{'error-border': inputErrors.monthsErrors}" v-model="monthsInput" placeholder="MM" type="number" name="month" id="month">
+              <span v-if="inputErrors.monthsErrors" class="error-msg">{{ inputErrors.monthsErrors }}</span>
           </div>
           <div class="input-container">
-            <label for="year">year</label>
-            <input v-model="yearsInput" placeholder="YYYY" type="number" name="year" id="year">
+            <label :class="{'error-label': inputErrors.yearsErrors}" for="year">year</label>
+            <input :class="{'error-border': inputErrors.yearsErrors}" v-model="yearsInput" placeholder="YYYY" type="number" name="year" id="year">
+            <span v-if="inputErrors.yearsErrors" class="error-msg">{{ inputErrors.yearsErrors }}</span>
           </div>
           <button role="button" class="arrow" type="submit">
           <svg xmlns="http://www.w3.org/2000/svg" width="46" height="44" viewBox="0 0 46 44"><g fill="none" stroke="#FFF" stroke-width="2"><path d="M1 22.019C8.333 21.686 23 25.616 23 44M23 44V0M45 22.019C37.667 21.686 23 25.616 23 44"/></g></svg>
@@ -70,6 +153,7 @@ main {
   --light-grey: hsl(0, 0%, 86%);
   --smokey-grey: hsl(0, 1%, 44%);
   --purple: hsl(259, 100%, 65%);
+  --light-red: hsl(0, 100%, 67%);
 
 }
 
@@ -91,13 +175,12 @@ main {
 .arrow {
   border-color: transparent;
   position: absolute;
-  bottom: -155%;
+  bottom: -175%;
   right: 39%;
   transform: translateY(-50%);
   background-color: var(--purple);
   border-radius: 50%;
-  width: 40px;
-  padding: .4rem;
+  padding: .8rem;
   transition: all .3s ease-in-out;
   cursor: pointer;
 }
@@ -166,6 +249,22 @@ main {
   font-weight: 800;
 }
 
+.error-msg {
+  color: var(--light-red);
+  font-size: 0.5rem;
+  font-weight: 300;
+  text-transform: capitalize;
+  font-style: italic;
+}
+
+.error-border {
+  border: 1px solid var(--light-red) !important;
+}
+
+.error-label {
+  color: var(--light-red) !important;
+}
+
 @media (min-width: 768px) {
   .container {
     max-width: none;
@@ -173,7 +272,7 @@ main {
   }
 
   .arrow {
-    right: -25%;
+    right: -48%;
   }
 
   .date-inputs input {
