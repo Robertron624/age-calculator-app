@@ -35,12 +35,12 @@ Users should be able to:
 
 ### Screenshot
 
-![](./screenshot.jpg)
+![image](https://user-images.githubusercontent.com/72587880/229925455-534d468a-1702-452f-b495-a989d1b4d7c5.png)
 
 ### Links
 
 - Solution URL: [Solution URL](https://github.com/Robertron624/age-calculator-app)
-- Live Site URL: [Live site URL](https://your-live-site-url.com)
+- Live Site URL: [Live site URL](https://magnificent-frangollo-5906ad.netlify.app/)
 
 ## My process
 
@@ -131,4 +131,4 @@ framework will still be react for intermediate and advance projects but I want t
 
 ## Acknowledgments
 
-- [Borislav Hadzhiev](https://bobbyhadz.com/) his article I mentioned in useful resources.
+- [Borislav Hadzhiev](https://bobbyhadz.com/) for his article I mentioned in useful resources.
