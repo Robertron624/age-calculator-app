@@ -83,10 +83,10 @@
       },
       
       isDateValid (year, month, day) {
-        const date = new Date(year, month, day);
+        const date = new Date(year, month-1, day); // month is 0 based, thats why we need to subtract 1 from the users input
 
-
-        if (date.getFullYear() == year && date.getMonth() == month && date.getDate() == day) {
+        // check if year, month and day are the same ( we stract 1 from the users input because in date object a month is 0 based )
+        if (date.getFullYear() == year && date.getMonth() == month - 1 && date.getDate() == day) {
           return true;
         } else {
           return false;
@@ -106,6 +106,8 @@
         if(!this.isDateValid(this.yearsInput, this.monthsInput, this.daysInput)) {
           this.dateError = true;
           return;
+        }else {
+          this.dateError = false;
         }
 
 
@@ -133,18 +135,18 @@
       <div class="date-inputs">
         <form action="GET" @submit.prevent="calculate">
           <div class="input-container">
-              <label :class="{'error-label': inputErrors.daysErrors}" for="day">Day</label>
-              <input :class="{'error-border': inputErrors.daysErrors}" v-model="daysInput" placeholder="DD" type="number" name="day" id="day">
+              <label :class="{'error-label': inputErrors.daysErrors || dateError}" for="day">Day</label>
+              <input :class="{'error-border': inputErrors.daysErrors || dateError}" v-model="daysInput" placeholder="DD" type="number" name="day" id="day">
               <span v-if="inputErrors.daysErrors" class="error-msg">{{ inputErrors.daysErrors }}</span>
           </div>
           <div class="input-container">
-              <label :class="{'error-label': inputErrors.monthsErrors}" for="month">Month</label>
-              <input :class="{'error-border': inputErrors.monthsErrors}" v-model="monthsInput" placeholder="MM" type="number" name="month" id="month">
+              <label :class="{'error-label': inputErrors.monthsErrors || dateError}" for="month">Month</label>
+              <input :class="{'error-border': inputErrors.monthsErrors || dateError}" v-model="monthsInput" placeholder="MM" type="number" name="month" id="month">
               <span v-if="inputErrors.monthsErrors" class="error-msg">{{ inputErrors.monthsErrors }}</span>
           </div>
           <div class="input-container">
-            <label :class="{'error-label': inputErrors.yearsErrors}" for="year">year</label>
-            <input :class="{'error-border': inputErrors.yearsErrors}" v-model="yearsInput" placeholder="YYYY" type="number" name="year" id="year">
+            <label :class="{'error-label': inputErrors.yearsErrors || dateError}" for="year">year</label>
+            <input :class="{'error-border': inputErrors.yearsErrors || dateError}" v-model="yearsInput" placeholder="YYYY" type="number" name="year" id="year">
             <span v-if="inputErrors.yearsErrors" class="error-msg">{{ inputErrors.yearsErrors }}</span>
           </div>
           <button role="button" class="arrow" type="submit">
