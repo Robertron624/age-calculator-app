@@ -12,7 +12,8 @@
           yearsErrors: "",
           monthsErrors: "",
           daysErrors: "",
-        }
+        },
+        dateError: false,
       }
     },
     methods: {
@@ -81,7 +82,17 @@
         return isValid;
       },
       
+      isDateValid (year, month, day) {
+        const date = new Date(year, month, day);
 
+
+        if (date.getFullYear() == year && date.getMonth() == month && date.getDate() == day) {
+          return true;
+        } else {
+          return false;
+        }
+      },
+      
       calculate() {
 
         if(this.checkEmpty() > 0) return;
@@ -92,7 +103,12 @@
 
         if (!validDay || !validMonth || !validYear) return;
 
-        console.log("submitted !!")
+        if(!this.isDateValid(this.yearsInput, this.monthsInput, this.daysInput)) {
+          this.dateError = true;
+          return;
+        }
+
+
         const date = new Date(this.yearsInput, this.monthsInput, this.daysInput);
         const today = new Date();
 
@@ -103,6 +119,7 @@
         this.years = Math.floor(diffInYears);
         this.months = Math.floor(diffInMonths);
         this.days = 31 - Math.floor(diffInDays);
+        console.log("submitted !!")
       },
     },
   }
@@ -135,7 +152,7 @@
         </button>
         </form>
         <!-- <img class="arrow" src="icon-arrow.svg" alt="arrow"> -->
-
+        <span v-if="dateError" class="error-msg">Must be a valid date</span>
       </div>
       <div class="calculation">
         <span>{{ years }} <strong>years</strong></span>
@@ -251,7 +268,7 @@ main {
 
 .error-msg {
   color: var(--light-red);
-  font-size: 0.5rem;
+  font-size: 0.6rem;
   font-weight: 300;
   text-transform: capitalize;
   font-style: italic;
@@ -272,7 +289,7 @@ main {
   }
 
   .arrow {
-    right: -48%;
+    right: -28%;
   }
 
   .date-inputs input {
@@ -280,7 +297,7 @@ main {
   }
 
   .date-inputs form {
-    width: 70%;
+    width: 80%;
   }
 }
 </style>
